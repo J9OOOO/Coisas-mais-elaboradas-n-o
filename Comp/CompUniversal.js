@@ -3,6 +3,7 @@ const gh = require('decimal.js')
 const Op = {
     "+": {peso: 1, tipo: "+", usa: 2},
     "-": {peso: 1, tipo: "-", usa: 2},
+    "§§": {peso: 1, tipo: "§§", usa: 1}, //Esse é o "-" unário
     "*": {peso: 2, tipo: "*", usa: 2},
     "/": {peso: 2, tipo: "/", usa: 2},
     "neg": {peso: 3, tipo: "neg", usa: 1},
@@ -26,13 +27,16 @@ const Op = {
     "log": {peso: 4, tipo: "log", usa: 1},
     "ln": {peso: 4, tipo: "ln", usa: 1},
     "logn": {peso: 4, tipo: "logn", usa: 2},
+    "e-": {peso: 4, tipo: "e-", usa: 2},
+    "e+": {peso: 4, tipo: "e+", usa: 2},
     "(": "(",
-    ")": ")"
+    ")": ")",
+    //Delete isso no final, eu não sei as consequências disso futuramente:
 }
 let listaOp = []
 for(let j = 0; (Object.values(Op)[j].tipo) !== undefined; j++) listaOp.push({peso: Object.values(Op)[j].peso, tipo: Object.values(Op)[j].tipo, usa: Object.values(Op)[j].usa})
 listaOp.sort((a, b) => b.tipo.length - a.tipo.length);
-//onsole.log(listaOp)
+//console.log(listaOp)
 
 function Numb(string) {
     let CompNumb = []
@@ -41,18 +45,23 @@ function Numb(string) {
         let numero = ""
 
         if (!isNaN(Number(string[i]))) {
-            while (i < string.length && (!isNaN(Number(string[i])) || string[i] === ".")) {
+            while ((i < string.length && (!isNaN(Number(string[i])) || string[i] === "."))) {
+                //console.log((i < string.length && (!isNaN(Number(string[i])), string[i] === ".")) || (string[i] === "-" && (string[i - 1] === "(" || i === 0)))
                 numero += string[i]
                 ++i
             }
             CompNumb.push(gh(numero))
             --i
-        } else {CompNumb.push(string[i])}
+        } else {
+            if (string[i] === "-" && (string[i - 1] === "(" || i === 0)) {CompNumb.push("§§")} else {CompNumb.push(string[i])}
+        }
     }
 
     return CompNumb
 }
 
+//console.log(Numb("-1+1"))
+//console.log(Operadores(Numb("-1+1")))
 
 /*
 function Operadores(string) {
@@ -94,7 +103,7 @@ function Operadores(string) {
             //if (i > string.leng) break
 
             let texto = string[i]
-            //console.log(texto, listaOp[j].tipo)
+            //console.log(texto, listaOp[j].tipo, string)
             if (texto === listaOp[j].tipo) {
                 CompOperadores.push(listaOp[j])
                 pronto = true
@@ -124,9 +133,17 @@ function ColarCaracteres(lista) {
 
         let texto = ""
 
-        while (i < lista.length && typeof lista[i] === "string" && lista[i] !== "(" && lista[i] !== ")" && !listaOp.map(obj => obj.tipo).includes(lista[i])) {
+        while ((i < lista.length && typeof lista[i] === "string" && lista[i] !== "(" && lista[i] !== ")" && !listaOp.map(obj => obj.tipo).includes(lista[i]))) {
             //console.log(listaOp.map(obj => obj.tipo).includes(lista[i]), lista[i])
-            texto += lista[i]
+
+            //console.log(lista[i] + lista[i + 1])
+
+            if (lista[i] + lista[i + 1] === "e-" || lista[i] + lista[i + 1] === "e+") {
+                texto += lista[i] + lista[i + 1]
+                ++i
+            } else {
+                texto += lista[i]
+            }
             i++
         }
 
@@ -151,7 +168,7 @@ function TudoFeito(stringReal) {
     return Operadores(ColarCaracteres(Numb(stringReal)))
 }
 
-//console.log(TudoFeito("x^2"))
+//console.log(TudoFeito("sin(1e-10)"))
 
 module.exports = {
     Tokenizadar: TudoFeito,
