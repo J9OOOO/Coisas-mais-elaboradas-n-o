@@ -6,20 +6,22 @@ const valor = x => {
     if (typeof x === "string") {
     if (x.indexOf("(") !== -1) {
         try {
-            return gh(x)
+            gh(x)
+            return Decimal(x)
         } catch {
-            return `gh(${x})`
+            return `new Decimal(${x})`
         }
     }
     }
 
     //console.log(z)
-    return `gh(${x})`
+    return `new Decimal(${x})`
 }
 
 const op = {
     "+": (a, b) => `(${valor(a)}).add(${valor(b)})`,
     "-": (a, b) => `(${valor(a)}).sub(${valor(b)})`,
+    "§§": (a) => `(${valor(a)}).neg()`,
     "*": (a, b) => `(${valor(a)}).mul(${valor(b)})`,
     "/": (a, b) => `(${valor(a)}).div(${valor(b)})`,
     "neg": (a) => `(${valor(a)}).neg()`,
@@ -42,7 +44,9 @@ const op = {
     "nrt": (a, b) => `(${valor(a)}).nrt(${valor(b)})`,
     "log": (a) => `(${valor(a)}).log()`,
     "ln": (a) => `(${valor(a)}).ln()`,
-    "logn": (a, b) => `(${valor(a)}).logn(${valor(b)})`
+    "logn": (a, b) => `(${valor(a)}).logn(${valor(b)})`,
+    "e-": (a, b) => `(${valor(a)}).mul(${valor(10)}.pow(${valor(b)}.neg())`,
+    "e+": (a, b) => `(${valor(a)}).mul(${valor(10)}.pow(${valor(b)})`,
 }
 
 let string = "1+1"
@@ -129,12 +133,12 @@ function ColarFuncoes(lista) {
             lista[aaa + 1] = ""
             TirarVazios(lista)
             //console.log(string)
-        }
+        } else if(!isNaN(Number(lista[aaa])) && lista[aaa + 1][0] === "(" && typeof lista[aaa].usa === "undefined") throw new SyntaxError("Multiplicação implícita é inválida")
     }
     //Só Deus sabe como isso funciona (quero dizer, até que é bem óbvio kkkkkkkkk)
 }
 
-//console.log(TodosOsParenteses(Comp.Tokenizadar("x+(1")))
+//console.log(TodosOsParenteses(Comp.Tokenizadar("1e-10")))
 
 module.exports = {
     CompGeral : TodosOsParenteses
