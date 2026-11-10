@@ -29,9 +29,11 @@ const Op = {
     "logn": {peso: 4, tipo: "logn", usa: 2},
     "e-": {peso: 4, tipo: "e-", usa: 2},
     "e+": {peso: 4, tipo: "e+", usa: 2},
+    "**": {peso: 3, tipo: "**", usa: 2},
     "(": "(",
     ")": ")",
     //Delete isso no final, eu não sei as consequências disso futuramente:
+    //DELETA NÃO, JÁ RESOLVI ISSO
 }
 let listaOp = []
 for(let j = 0; (Object.values(Op)[j].tipo) !== undefined; j++) listaOp.push({peso: Object.values(Op)[j].peso, tipo: Object.values(Op)[j].tipo, usa: Object.values(Op)[j].usa})
@@ -127,18 +129,23 @@ function ColarCaracteres(lista) {
 
     for (let i = 0; i < lista.length; i++) {
         if (typeof lista[i] !== "string" || lista[i] === "(" || lista[i] === ")" || listaOp.map(obj => obj.tipo).includes(lista[i])) {
-            ColarCaracteresComp.push(lista[i])
+            if (lista[i] + lista[i + 1] === "**") {
+                ColarCaracteresComp.push("**")
+                ++i
+            } else {ColarCaracteresComp.push(lista[i])}
             continue
         }
+
+        //console.log(ColarCaracteresComp)
 
         let texto = ""
 
         while ((i < lista.length && typeof lista[i] === "string" && lista[i] !== "(" && lista[i] !== ")" && !listaOp.map(obj => obj.tipo).includes(lista[i]))) {
             //console.log(listaOp.map(obj => obj.tipo).includes(lista[i]), lista[i])
 
-            //console.log(lista[i] + lista[i + 1])
+            //console.log(lista[i])
 
-            if (lista[i] + lista[i + 1] === "e-" || lista[i] + lista[i + 1] === "e+") {
+            if (lista[i] + lista[i + 1] === "e-" || lista[i] + lista[i + 1] === "e+" || lista[i] + lista[i + 1] === "**") {
                 texto += lista[i] + lista[i + 1]
                 ++i
             } else {
@@ -168,11 +175,12 @@ function TudoFeito(stringReal) {
     return Operadores(ColarCaracteres(Numb(stringReal)))
 }
 
-//console.log(TudoFeito("sin(1e-10)"))
+//console.log(TudoFeito("x**2"))
 
 module.exports = {
     Tokenizadar: TudoFeito,
-    Op
+    Op,
+    listaOp
 }
 
 //Só converte string para um Array legível ou alguma merda assim, sla
