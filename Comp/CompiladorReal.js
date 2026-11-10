@@ -9,7 +9,7 @@ const valor = x => {
             gh(x)
             return Decimal(x)
         } catch {
-            return `new Decimal(${x})`
+            return `${x}`
         }
     }
     }
@@ -19,34 +19,35 @@ const valor = x => {
 }
 
 const op = {
-    "+": (a, b) => `(${valor(a)}).add(${valor(b)})`,
-    "-": (a, b) => `(${valor(a)}).sub(${valor(b)})`,
-    "§§": (a) => `(${valor(a)}).neg()`,
-    "*": (a, b) => `(${valor(a)}).mul(${valor(b)})`,
-    "/": (a, b) => `(${valor(a)}).div(${valor(b)})`,
-    "neg": (a) => `(${valor(a)}).neg()`,
-    "^": (a, b) => `(${valor(a)}).pow(${valor(b)})`,
-    "exp": (a) => `(${valor(a)}).exp()`,
-    "sin": (a) => `(${valor(a)}).sin()`,
-    "cos": (a) => `(${valor(a)}).cos()`,
-    "tan": (a) => `(${valor(a)}).tan()`,
-    "sinh": (a) => `(${valor(a)}).sinh()`,
-    "cosh": (a) => `(${valor(a)}).cosh()`,
-    "tanh": (a) => `(${valor(a)}).tanh()`,
-    "asin": (a) => `(${valor(a)}).asin()`,
-    "acos": (a) => `(${valor(a)}).acos()`,
-    "atan": (a) => `(${valor(a)}).atan()`,
-    "asinh": (a) => `(${valor(a)}).asinh()`,
-    "acosh": (a) => `(${valor(a)}).acosh()`,
-    "atanh": (a) => `(${valor(a)}).atanh()`,
-    "sqrt": (a) => `(${valor(a)}).sqrt()`,
-    "cbrt": (a) => `(${valor(a)}).cbrt()`,
-    "nrt": (a, b) => `(${valor(a)}).nrt(${valor(b)})`,
-    "log": (a) => `(${valor(a)}).log()`,
-    "ln": (a) => `(${valor(a)}).ln()`,
-    "logn": (a, b) => `(${valor(a)}).logn(${valor(b)})`,
-    "e-": (a, b) => `(${valor(a)}).mul(${valor(10)}.pow(${valor(b)}.neg())`,
-    "e+": (a, b) => `(${valor(a)}).mul(${valor(10)}.pow(${valor(b)})`,
+    "+": (a, b) => `${valor(a)}.add(${valor(b)})`,
+    "-": (a, b) => `${valor(a)}.sub(${valor(b)})`,
+    "§§": (a) => `${valor(a)}.neg()`,
+    "*": (a, b) => `${valor(a)}.mul(${valor(b)})`,
+    "/": (a, b) => `${valor(a)}.div(${valor(b)})`,
+    "neg": (a) => `${valor(a)}.neg()`,
+    "^": (a, b) => `${valor(a)}.pow(${valor(b)})`,
+    "exp": (a) => `${valor(a)}.exp()`,
+    "sin": (a) => `${valor(a)}.sin()`,
+    "cos": (a) => `${valor(a)}.cos()`,
+    "tan": (a) => `${valor(a)}.tan()`,
+    "sinh": (a) => `${valor(a)}.sinh()`,
+    "cosh": (a) => `${valor(a)}.cosh()`,
+    "tanh": (a) => `${valor(a)}.tanh()`,
+    "asin": (a) => `${valor(a)}.asin()`,
+    "acos": (a) => `${valor(a)}.acos()`,
+    "atan": (a) => `${valor(a)}.atan()`,
+    "asinh": (a) => `${valor(a)}.asinh()`,
+    "acosh": (a) => `${valor(a)}.acosh()`,
+    "atanh": (a) => `${valor(a)}.atanh()`,
+    "sqrt": (a) => `${valor(a)}.sqrt()`,
+    "cbrt": (a) => `${valor(a)}.cbrt()`,
+    "nrt": (a, b) => `${valor(a)}.nrt(${valor(b)})`,
+    "log": (a) => `${valor(a)}.log()`,
+    "ln": (a) => `${valor(a)}.ln()`,
+    "logn": (a, b) => `${valor(a)}.logn(${valor(b)})`,
+    "e-": (a, b) => `${valor(a)}.mul(${valor(10)}.pow(${valor(b)}.neg()))`,
+    "e+": (a, b) => `${valor(a)}.mul(${valor(10)}.pow(${valor(b)}))`,
+    "**": (a, b) => `${valor(a)}.pow(${valor(b)})`,
 }
 
 let string = "1+1"
@@ -109,7 +110,7 @@ function PegarParenteses(lista) {
 
     if (p0 !== -1 && p1 != -1) {
         r = ResolveAsExpressoesLa((lista.slice(p0 + 1, p1)))
-        lista.splice(p0, p1 - p0 + 1, "(" + r + ")")
+        lista.splice(p0, p1 - p0 + 1, "" + r + "") //Experimental
     } else {
         r = ResolveAsExpressoesLa(lista)
     }
